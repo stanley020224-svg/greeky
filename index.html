@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" href="data:,">
+<title>Greeky</title>
+<link rel="stylesheet" href="static/app.css">
+<style>
+@font-face{font-family:'Gentium Plus';src:url('fonts/GentiumPlus-Regular.ttf') format('truetype');font-weight:400;font-style:normal}
+@font-face{font-family:'Gentium Plus';src:url('fonts/GentiumPlus-Bold.ttf') format('truetype');font-weight:700;font-style:normal}
+@font-face{font-family:'Gentium Plus';src:url('fonts/GentiumPlus-Italic.ttf') format('truetype');font-weight:400;font-style:italic}
+</style>
+<link rel="stylesheet" href="static/print.css">
+</head>
+<body>
+
+<div class="credit-line">程式由 @Demodikes 開發，僅供改革宗神學院內部使用</div>
+
+<div class="topbar">
+  <div class="brand">Greeky <span class="ver">v1.6.4</span> <small>希臘文論述分析 Discourse Analysis</small></div>
+  <div class="spacer"></div>
+  <button class="btn" id="btnOpen">開啟專案</button>
+  <button class="btn" id="btnSave">儲存</button>
+  <button class="btn" id="btnNew">新分析</button>
+  <button class="btn primary" id="btnExport">匯出 PDF</button>
+  <button class="btn ghost" id="btnHelp">說明</button>
+  <button class="btn ghost" id="btnQuit" title="關閉本機服務">關閉程式</button>
+</div>
+
+<div class="wrap">
+  <!-- ================= 左側工具列 ================= -->
+  <div class="rail" id="rail">
+    <button class="rbtn" id="rTake" title="直接選經文（卷／章／節）"><span class="ic">①</span><span class="nm">選經文</span></button>
+    <button class="rbtn" id="rPaste" title="貼上希臘文原文，自動分句"><span class="ic">②</span><span class="nm">貼原文</span></button>
+    <button class="rbtn" id="rMeta" title="標題與來源"><span class="ic">③</span><span class="nm">標題</span></button>
+    <div class="rsep"></div>
+    <button class="rbtn on" id="rTabOutline" title="④ 縮排分析"><span class="ic">④</span><span class="nm">縮排</span></button>
+    <button class="rbtn" id="rTabGraph" title="⑤ 關係圖（拖曳連線）"><span class="ic">⑤</span><span class="nm">關係圖</span></button>
+    <button class="rbtn" id="rTabTable" title="關係總表"><span class="ic">≡</span><span class="nm">關係表</span></button>
+    <div class="rsep"></div>
+    <button class="rbtn" id="rAdd" title="新增子句"><span class="ic">＋</span><span class="nm">新子句</span></button>
+    <button class="rbtn" id="rRedraw" title="重畫：刪除全部關係連線（清空後可重新連線；⌘Z 可復原）"><span class="ic">↻</span><span class="nm">重畫</span></button>
+    <button class="rbtn" id="rFront" title="關係連接詞提前到句首"><span class="ic">⇤</span><span class="nm">連詞提前</span></button>
+    <button class="rbtn" id="rCuv" title="和合本對照欄"><span class="ic">合</span><span class="nm">和合本</span></button>
+    <button class="rbtn" id="rVerbs" title="標示主要動詞／分詞／不定詞（紅色深淺）"><span class="ic">動</span><span class="nm">標示動詞</span></button>
+    <button class="rbtn" id="rNouns" title="顯示名詞，依五格（主、屬、與間、受直、呼）用橙色深淺標出"><span class="ic">名</span><span class="nm">名詞</span></button>
+    <button class="rbtn" id="rAdjs" title="顯示形容詞，依五格用紫色深淺標出"><span class="ic">形</span><span class="nm">形容詞</span></button>
+    <button class="rbtn on" id="rProper" title="用下劃線標出人名／地名／國族與國家（特＝特殊名詞）"><span class="ic">特</span><span class="nm">特殊名詞</span></button>
+    <div class="rsep"></div>
+    <button class="rbtn rtool" id="rRowUp" title="上移一句"><span class="ic">↑</span><span class="nm">上移</span></button>
+    <button class="rbtn rtool" id="rRowDown" title="下移一句"><span class="ic">↓</span><span class="nm">下移</span></button>
+    <button class="rbtn rtool" id="rRowAdd" title="在選取的行後面新增一句"><span class="ic">＋</span><span class="nm">新增</span></button>
+    <button class="rbtn rtool" id="rRowScissor" title="剪句工具（B）：游標變剪刀，在詞與詞之間點一下切開"><span class="ic">✂</span><span class="nm">剪句</span></button>
+    <button class="rbtn rtool" id="rRowWord" title="詞序調換工具（C）：拖動句中單詞調序"><span class="ic">⇄</span><span class="nm">詞序</span></button>
+    <button class="rbtn rtool" id="rRowMerge" title="併入上句（D）：把選取的行併進上一句"><span class="ic">⇧</span><span class="nm">併入</span></button>
+    <button class="rbtn rtool" id="rRowLink" title="連關係：把選取的行連到指定範圍，建立子句關係"><span class="ic">⛓</span><span class="nm">連關係</span></button>
+    <button class="rbtn rtool" id="rRowUnprep" title="取消這一句的縮排掛靠，回到一般縮排" style="display:none"><span class="ic">⤺</span><span class="nm">取消掛靠</span></button>
+    <button class="rbtn rtool" id="rRowDel" title="刪除選取的行"><span class="ic">⌫</span><span class="nm">刪除</span></button>
+    <div class="rsep"></div>
+    <button class="rbtn act" id="rSave" title="儲存專案"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><path d="M17 21v-8H7v8"/><path d="M7 3v5h8"/></svg></span><span class="nm">儲存</span></button>
+    <button class="rbtn act" id="rOpen" title="開啟專案"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg></span><span class="nm">開啟</span></button>
+    <button class="rbtn act" id="rExport" title="匯出 PDF"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6"/><path d="M12 18v-6"/><path d="M9.5 14.5 12 12l2.5 2.5"/></svg></span><span class="nm">匯出</span></button>
+    <button class="rbtn act" id="rNew" title="新分析（清空）"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg></span><span class="nm">新分析</span></button>
+    <button class="rbtn" id="rHelp" title="使用說明"><span class="ic">？</span><span class="nm">說明</span></button>
+  </div>
+
+  <!-- ================= 主區 ================= -->
+  <div class="main">
+
+    <!-- 直接取經文 -->
+    <div class="card" id="cardPassage">
+      <h3>① 直接選經文 <span class="hint">離線新約原文（SBLGNT／MorphGNT）；也可用下面 ② 貼上其他版本</span></h3>
+      <div class="row-opts">
+        <select id="pBook" class="sel"></select>
+        <select id="pCh" class="sel"></select>
+        <label class="hint" style="font-size:12.5px">節</label>
+        <select id="pV1" class="sel"></select>
+        <label class="hint" style="font-size:12.5px">到</label>
+        <select id="pV2" class="sel"></select>
+        <button class="btn primary" id="btnLoad">取經文</button>
+        <label><input type="checkbox" id="optFrontOn" checked> 取文時就把連接詞提到句首</label>
+        <label><input type="checkbox" id="optCuvOn" checked> 同時帶入和合本對照</label>
+      </div>
+      <div class="hint" id="passageHint" style="margin-top:8px;color:#a9a294;font-size:12px">
+        選好卷、章、節 → 按「取經文」，程式會自動分句並帶入標題。
+      </div>
+      <div class="passage-prev" id="passagePrev"></div>
+      <div class="cuv-prev-wrap" id="cuvPrevWrap" style="display:none">
+        <div class="cuv-head">
+          <b>和合本對照</b>
+          <span class="hint">每句右邊是和合本；對得不順可雙擊直接改，或按「重新對照」重鋪。</span>
+          <div class="spacer"></div>
+          <button class="btn sm" id="btnCuvRedo">重新對照</button>
+          <button class="btn sm ghost" id="btnCuvOff">關閉對照欄</button>
+        </div>
+        <div class="cuv-prev" id="cuvPrev"></div>
+      </div>
+    </div>
+
+    <!-- 貼上經文 -->
+    <div class="card" id="cardPaste">
+      <h3>② 貼上希臘文原文 <span class="hint">NA28 / SBLGNT 皆可；含節號會自動分節</span></h3>
+      <textarea class="paste" id="paste" placeholder="例：14 Καὶ καθὼς Μωϋσῆς ὕψωσεν τὸν ὄφιν ἐν τῇ ἐρήμῳ, οὕτως ὑψωθῆναι δεῖ τὸν υἱὸν τοῦ ἀνθρώπου, 15 ἵνα πᾶς ὁ πιστεύων ἐν αὐτῷ ἔχῃ ζωὴν αἰώνιον."></textarea>
+      <div class="row-opts">
+        <button class="btn primary" id="btnSplit">分句並開始分析</button>
+        <label><input type="checkbox" id="optComma" checked> 逗號後接連接詞也切分</label>
+        <label><input type="checkbox" id="optPrep" checked> 介係詞片語獨立成行</label>
+        <label><input type="checkbox" id="optVerse" checked> 保留節號</label>
+        <span class="hint" id="splitHint" style="color:#a9a294;font-size:12px">分句結果只是草稿，之後可再手動切分或合併</span>
+      </div>
+    </div>
+
+    <!-- 標題資訊 -->
+    <div class="card">
+      <h3>③ 標題與來源</h3>
+      <div class="meta-grid">
+        <label>書卷</label><input id="mBook" placeholder="約翰福音三" value="約翰福音三">
+        <label>起始節</label><input id="mFrom" placeholder="14" value="14">
+        <label>結束節</label><input id="mTo" placeholder="21" value="21">
+        <label>譯本</label><input id="mVer" placeholder="NA28" value="NA28">
+      </div>
+      <div style="margin-top:10px;display:flex;gap:10px;align-items:center">
+        <label style="font-size:12.5px;color:#5c574e">副標題（可留空）</label>
+        <input id="mSub" placeholder="例：以弗所書二8-10 和合本" style="border:1px solid #d9d3c7;border-radius:6px;padding:4px 8px;flex:1">
+      </div>
+    </div>
+
+    <!-- 分析區 -->
+    <div class="tabs">
+      <div class="tab on" data-tab="outline">④ 縮排分析</div>
+      <div class="tab" data-tab="graph">⑤ 關係圖（拖曳連線）</div>
+      <div class="tab" data-tab="table">關係總表</div>
+    </div>
+
+    <div class="card" id="viewOutline">
+      <div class="ol-head">
+        <span class="hint" style="color:#a9a294;font-size:12px">
+          功能鍵都在<b>左側工具列</b>：＋ 新子句、↻ 重畫、⇤ 連詞提前、合 和合本、動 標示動詞。
+          <b>重畫</b>＝刪除全部關係連線（句子保留，⌘Z 可復原）。
+          拖左側 ⛓ 把手到另一行＝建立關係；點標記可改關係。
+          按「標示動詞」會把<b>主要動詞（藍）</b>與<b>分詞（綠）</b>上色；
+          「專名」開著時，<b>人名</b>（紫線）、<b>地名</b>（綠線）、<b>國族／國家</b>（橙線）會加下劃線；
+          <b>任何一句</b>都可以拖到別的句子的某個<b>單詞</b>上放開，就會掛靠在
+          那個單詞後面（該單詞會亮起、縮排跟著過去）。
+        </span>
+      </div>
+      <div class="ol-canvas-wrap">
+        <div class="ol-split" id="olSplit">
+          <div class="ol-paper">
+            <div class="ol-title" id="olTitle">約翰福音三14 至21</div>
+            <div class="ol-body" id="olBody"><div class="ol-hint">還沒有內容。先在上面選經文，或按「＋ 新增子句」。</div></div>
+          </div>
+          <svg class="ol-note-svg" id="noteSvg"></svg>
+          <div class="ol-notes-lane" id="olNotesLane"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" id="viewGraph" style="display:none">
+      <div class="ol-head">
+        <button class="btn sm" id="btnGraphReset">重新排版</button>
+        <span class="zoom-ctl">
+          <button class="btn sm" id="zoomOut" title="縮小">－</button>
+          <span class="zoom-val" id="zoomVal">100%</span>
+          <button class="btn sm" id="zoomIn" title="放大">＋</button>
+        </span>
+        <span class="hint" style="color:#a9a294;font-size:12px">
+          由左往右展開的邏輯樹（腦圖）：根在最左，關係標籤貼在分支上，子句卡片為葉。
+          方塊可自由拖動擺位；從方塊<b>右側的小圓點</b>拖到另一句＝建立關係（涵蓋中間所有句子）。
+          畫布可以捲動，可用 ＋／－ 縮放。
+        </span>
+      </div>
+      <div class="graph-wrap" id="graphWrap">
+        <div id="graph"></div>
+        <div class="gcuv" id="graphCuv">
+          <div class="gcuv-hd">和合本對照 <span class="hint">點一句可跳到縮排分析</span></div>
+          <div class="gcuv-body" id="graphCuvBody"><div class="gcuv-empty">載入中…</div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" id="viewTable" style="display:none">
+      <div class="ol-head">
+        <span class="hint" style="color:#a9a294;font-size:12px">每一列就是一條關係（涵蓋的行範圍、標記）。點一列可修改或刪除。</span>
+      </div>
+      <div class="reltable" id="relTable"></div>
+    </div>
+
+  </div>
+
+  <!-- ================= 側欄（卡片欄） ================= -->
+  <div class="side">
+
+    <div class="card sidecard" id="cardWord">
+      <h3>詞形／語態查詢</h3>
+      <div id="wordPanel"><div class="empty">點左邊希臘文的任一個詞，這裡會顯示詞性、時態、語態、語氣、格位等。</div></div>
+    </div>
+
+    <div class="card sidecard" id="cardTrans">
+      <h3>譯本 <span class="hint">並列閱讀整段經文</span></h3>
+      <div class="trans-pick">
+        <select id="transSel" class="sel"></select>
+        <button class="btn sm" id="transRefresh" title="重新載入這個範圍">↻</button>
+      </div>
+      <div class="trans-ref" id="transRef"></div>
+      <div class="trans-body" id="transBody"><div class="empty">先在上面「① 直接選經文」取一段經文，這裡就會列出所選譯本的整段譯文。</div></div>
+      <div class="trans-note" id="transNote"></div>
+    </div>
+
+    <div class="card sidecard" id="cardLegend">
+      <h3>關係標記對照</h3>
+      <div class="legend" id="legend"><span class="empty">載入中…</span></div>
+    </div>
+
+    <div class="card sidecard" id="cardNoteList">
+      <h3>筆記 <span class="hint">右鍵句子 → 筆記</span></h3>
+      <div class="notelist" id="noteList"><div class="empty">還沒有筆記。在縮排分析的行上按右鍵 →「筆記」，就會在紙張右側開一個註記框，並用虛線連到那句話。</div></div>
+    </div>
+
+  </div>
+</div>
+
+<!-- 關係挑選對話框 -->
+<div class="mask" id="relMask">
+  <div class="dlg">
+    <h2>選擇子句之間的關係</h2>
+    <p class="sub" id="relRange"></p>
+    <p class="sub">點選後，圖上只顯示<b>簡寫</b>（多字直排）；全稱只在此對話框顯示。<b>*</b> 標示重點所在：<b>首句</b>（星號在豎線與上橫線拐角）或<b>次句</b>（星號在關係字下方、下橫線上方）。</p>
+    <div class="rel-list" id="relList"></div>
+    <div class="dlg-foot">
+      <label style="font-size:12.5px">重點在哪一句：
+        <select id="relStarMode" style="margin-left:5px">
+          <option value="">無</option>
+          <option value="first">首句（星號在豎線與上橫線拐角）</option>
+          <option value="second">次句（星號在關係字下方）</option>
+        </select>
+      </label>
+      <label style="font-size:12.5px;margin-left:12px">自訂標記
+        <input type="text" id="relCustom" style="width:74px;margin-left:5px" placeholder="如 進">
+      </label>
+      <div class="spacer"></div>
+      <span style="font-size:12.5px">預覽 <b id="relPreview" style="font-size:15px;color:#7a5c2e"></b></span>
+    </div>
+    <div class="dlg-foot" style="border-top:none;margin-top:6px;padding-top:0">
+      <div class="spacer"></div>
+      <button class="btn" id="relRemove">刪除這條關係</button>
+      <button class="btn" id="relCancel">取消</button>
+      <button class="btn primary" id="relOk">確定</button>
+    </div>
+  </div>
+</div>
+
+<!-- 儲存專案 -->
+<div class="mask" id="saveMask">
+  <div class="dlg" style="max-width:470px">
+    <h2>💾 儲存專案</h2>
+    <p class="sub">給這份分析取個名字，之後可以在「開啟專案」隨時取回。</p>
+    <label class="fld"><span>專案名稱</span><input type="text" id="saveName" placeholder="例如 約翰福音三14-21"></label>
+    <div class="info-box" id="saveInfo"></div>
+    <div class="dlg-foot">
+      <div class="spacer"></div>
+      <button class="btn" id="saveCancel">取消</button>
+      <button class="btn primary" id="saveOk">儲存</button>
+    </div>
+  </div>
+</div>
+
+<!-- 開啟專案 -->
+<div class="mask" id="openMask">
+  <div class="dlg" style="max-width:640px">
+    <h2>📂 開啟專案</h2>
+    <p class="sub">專案存在這個瀏覽器裡（同一台裝置／同一個瀏覽器），點一張卡片即可開啟。</p>
+    <div class="proj-list" id="projList"></div>
+    <div class="dlg-foot">
+      <button class="btn ghost" id="openFolder">📁 開啟資料夾</button>
+      <div class="spacer"></div>
+      <button class="btn" id="openCancel">關閉</button>
+    </div>
+  </div>
+</div>
+
+<!-- 匯出 PDF -->
+<div class="mask" id="exportMask">
+  <div class="dlg" style="max-width:500px">
+    <h2>📄 匯出 PDF</h2>
+    <p class="sub">用與畫面相同的版面產生 A4 直式 PDF，直接存到「另存為 PDF」。</p>
+    <label class="fld"><span>檔名</span><input type="text" id="exportName" placeholder="例如 約翰福音三14-21"></label>
+    <div class="info-box" id="exportInfo"></div>
+    <div class="dlg-foot">
+      <button class="btn ghost" id="exportFolder">📁 匯出資料夾</button>
+      <div class="spacer"></div>
+      <button class="btn" id="exportCancel">取消</button>
+      <button class="btn primary" id="exportOk">開始匯出</button>
+    </div>
+  </div>
+</div>
+
+<!-- 新分析 -->
+<div class="mask" id="newMask">
+  <div class="dlg" style="max-width:470px">
+    <h2>✦ 新分析</h2>
+    <p class="sub">目前內容會先自動留一份備份，再清空開始新的分析。</p>
+    <div class="info-box" id="newInfo"></div>
+    <div class="dlg-foot">
+      <div class="spacer"></div>
+      <button class="btn" id="newCancel">取消</button>
+      <button class="btn primary" id="newOk">清空並開始</button>
+    </div>
+  </div>
+</div>
+
+<!-- 說明 -->
+<div class="mask" id="helpMask">
+  <div class="dlg">
+    <h2>怎麼用</h2>
+    <p class="sub">照著《解經手冊》論述分析的兩步走。</p>
+    <div class="legend" style="font-size:13px">
+      <p><b>第一步：縮排分析</b>——一行一句，介係詞子句算單獨子句；修飾動詞的片語向右縮排。</p>
+      <p><b>第二步：子句邏輯關係</b>——把某一句拖到它所屬的那一句上，程式產生一條<b>關係括號</b>，
+        涵蓋這兩行之間的所有句子。誰包住誰由範圍自動決定，所以整段句群會從中間分叉出去，
+        和《01_約翰福音03.14-21》長得一樣。</p>
+      <p><b>建立關係</b>：把某一行左側的 <b>⛓</b> 把手拖到另一行放開，就完成一條關係，
+        並立即跳出關係清單讓你選。也可以切到「關係圖」，從方塊右側的圓點拖到另一句連線。</p>
+      <p><b>行工具列</b>：在任一行上按<b>滑鼠右鍵</b>，會在指標旁彈出工具列：
+        <kbd>↑</kbd><kbd>↓</kbd> 調整行序、<kbd>✂</kbd> 剪句模式、<kbd>⇄</kbd> 詞序模式、
+        <kbd>⇧</kbd> 併入上一句、<kbd>🗑</kbd> 刪除這句。</p>
+      <p><b>剪句（✂）</b>：按右鍵 → <kbd>✂</kbd> 開啟後，在句中兩個詞之間點一下，就從那裡切開；
+        <b>切一次後工具會自動關閉</b>（單次使用）。</p>
+      <p><b>調詞序（⇄）</b>：按右鍵 → <kbd>⇄</kbd> 開啟後，把句中的單詞拖到另一個詞上放開，
+        即可調換順序。</p>
+      <p><b>查語態</b>：點句中的任一希臘文詞，右側顯示詞性、時態、語態、語氣、格位、原形與字義（離線新約詞形庫）。</p>
+      <p><b>介係詞片語對照</b>：把滑鼠移到介係詞片語所修飾的動詞上，右側和合本欄對應的那個詞會亮起來，
+        讓你直接看出這個片語在中譯裡落到哪個字。</p>
+      <p><b>關係圖（腦圖）</b>：邏輯樹由左往右展開，根在最左，關係標籤貼在分支上，子句卡片為葉；
+        方塊可自由拖動，右上 <kbd>＋</kbd>／<kbd>－</kbd> 可縮放。</p>
+      <p><b>譯本（右側卡片欄）</b>：右側「譯本」卡片可切換 <b>和合本 / 當代譯本 / ASV</b>，
+        並列讀完整段經文。這一欄只依你取的書卷章節範圍顯示，<b>不跟縮排分析聯動</b>。</p>
+      <p><b>筆記（像 Word 的批注）</b>：在任一句上按<b>滑鼠右鍵</b> → <kbd>✎ 筆記</kbd>，
+        會在句子旁開一個扁平小面板，直接寫下筆記後按「儲存」；句子右側就會出現一張註記卡，
+        並用<b>虛線</b>連到那句話（卡片可拖動、可直接再編輯）。
+        右側「筆記」卡片會列出全部筆記，點一下跳到該句。</p>
+      <p><b>匯出</b>：按右上「匯出 PDF」，用與畫面相同的版面產生 A4 直式 PDF，存到「Greeky／匯出」。</p>
+      <p style="color:#a9a294">資料來源：MorphGNT / SBLGNT 逐詞形態（CC-BY-SA）、Strong's Greek Dictionary（公眾領域）、Gentium Plus 字型（SIL OFL）。
+      內建譯本：和合本（公眾領域）、當代譯本開放資源（CC BY-SA 4.0）、ASV（公眾領域）。</p>
+    </div>
+    <div class="dlg-foot"><div class="spacer"></div><button class="btn primary" id="helpClose">知道了</button></div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<!-- 整句編輯工具列（雙擊句子進入編輯時，懸浮在該句上方） -->
+<div class="edit-bar" id="editBar"></div>
+
+<script src="static/data_loader.js"></script>
+<script src="static/greeky_core.js"></script>
+<script src="static/greeky_static.js"></script>
+<script src="static/outline.js"></script>
+<script src="static/app.js"></script>
+<script>try{document.getElementById("btnQuit").style.display="none";}catch(e){}</script>
+</body>
+</html>

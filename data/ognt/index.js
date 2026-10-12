@@ -1,0 +1,1 @@
+(window.__GD=window.__GD||{})["ognt/index"]=["1Co","1Jn","1Pe","1Th","1Ti","2Co","2Jn","2Pe","2Th","2Ti","3Jn","Ac","Col","Eph","Ga","Heb","Jas","Jn","Jud","Lk","Mk","Mt","Phm","Php","Re","Ro","Tit"];

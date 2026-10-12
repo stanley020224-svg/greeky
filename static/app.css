@@ -1,0 +1,561 @@
+/* 希臘文分析小程式 — 樣式 */
+:root{
+  --bg:#f6f4ef;
+  --panel:#ffffff;
+  --ink:#23211d;
+  --ink-2:#5c574e;
+  --line:#d9d3c7;
+  --line-2:#eae5da;
+  --accent:#7a5c2e;
+  --accent-2:#a8853f;
+  --blue:#31577f;
+  --red:#a8342c;
+  --greek:'Gentium Plus', 'Gentium Plus Compact', 'Times New Roman', serif;
+  --cjk:'PingFang TC','PingFang SC','Hiragino Sans GB','Songti TC','STHeiti','Arial Unicode MS','Noto Sans CJK TC','Noto Sans CJK SC','Source Han Sans TC','Noto Serif CJK TC','WenQuanYi Zen Hei','WenQuanYi Micro Hei','Microsoft JhengHei','Microsoft YaHei',sans-serif;
+}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%}
+body{
+  font-family:var(--cjk); background:var(--bg); color:var(--ink);
+  font-size:14px; -webkit-font-smoothing:antialiased;
+}
+button{font-family:var(--cjk);font-size:13px;cursor:pointer}
+input,select,textarea{font-family:var(--cjk);font-size:13px}
+
+/* ---------- 版面 ---------- */
+/* 最上方版權／使用聲明 */
+.credit-line{
+  text-align:center;
+  font-size:12px;
+  letter-spacing:.5px;
+  color:#6b5535;
+  background:#f6f1e6;
+  border-bottom:1px solid #e3d9c4;
+  padding:6px 12px;
+}
+.topbar{
+  display:flex;align-items:center;gap:10px;padding:8px 14px;
+  background:linear-gradient(#fffdf8,#f3eee3);border-bottom:1px solid var(--line);
+  position:sticky;top:0;z-index:50;
+}
+.brand{font-size:16px;font-weight:600;letter-spacing:.5px;color:var(--accent);white-space:nowrap}
+.brand small{font-weight:400;color:var(--ink-2);font-size:12px;margin-left:6px}
+.brand .ver{font-size:10.5px;color:#fff;background:var(--accent-2);border-radius:4px;
+  padding:1px 6px;margin-left:8px;vertical-align:2px;letter-spacing:.5px;font-weight:600}
+.spacer{flex:1}
+.btn{
+  border:1px solid var(--line);background:#fff;border-radius:6px;padding:5px 11px;
+  color:var(--ink);transition:.12s;white-space:nowrap;
+}
+.btn:hover{background:#f7f2e7;border-color:var(--accent-2)}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:#fff}
+.btn.primary:hover{background:#8d6b36}
+.btn.ghost{background:transparent;border-color:transparent;color:var(--ink-2)}
+.btn.ghost:hover{background:#efe9dc}
+.btn.sm{padding:2px 7px;font-size:12px;border-radius:5px}
+.btn[disabled]{opacity:.45;cursor:not-allowed}
+
+.wrap{display:grid;grid-template-columns:64px minmax(0,1fr) 360px;height:calc(100% - 49px)}
+.main{overflow:auto;padding:14px 16px 60px;min-width:0}
+.side{border-left:1px solid var(--line);background:var(--panel);overflow:auto;padding:12px 14px}
+/* 側欄＝卡片欄（1.4.0）：每一項都是一張可辨識的卡片，之後可再加欄位 */
+.side .sidecard{margin:0 0 12px;padding:10px 12px}
+.side .sidecard>h3{margin:0 0 8px;font-size:13.5px;font-weight:600;color:var(--accent);
+  display:flex;align-items:baseline;gap:8px;padding-bottom:6px;border-bottom:1px solid #ece5d6}
+.side .sidecard>h3 .hint{font-weight:400;font-size:11px;color:var(--ink-2)}
+/* ---- 譯本卡片 ---- */
+#cardTrans{background:#fffef9}
+.trans-pick{display:flex;gap:6px;align-items:center;margin-bottom:7px}
+.trans-pick .sel{flex:1;min-width:0}
+.trans-ref{font-family:var(--cjk);font-size:12px;color:var(--accent);font-weight:600;margin-bottom:5px}
+.trans-body{max-height:46vh;overflow:auto;padding-right:4px}
+.trans-v{display:grid;grid-template-columns:24px minmax(0,1fr);gap:7px;padding:3px 0 5px;border-bottom:1px solid #f4efe4}
+.trans-v .tv{font-family:var(--greek);font-size:11px;color:#b9b2a3;text-align:right;padding-top:2px}
+.trans-v .tt{font-family:var(--cjk);font-size:13px;line-height:1.65;color:#3d382f}
+.trans-v .tt.en{font-family:var(--greek);font-size:12.5px;line-height:1.55;color:#33302a}
+.trans-note{font-size:11px;color:#a9a294;line-height:1.5;margin-top:7px;padding-top:6px;border-top:1px dashed #e6dfd0}
+/* ---- 筆記卡片（清單） ---- */
+.notelist{max-height:30vh;overflow:auto}
+.note-item{border:1px solid var(--line-2);border-radius:7px;background:#fffdf6;padding:6px 8px;margin-bottom:6px;cursor:pointer}
+.note-item:hover{border-color:var(--accent-2);background:#fff9ea}
+.note-item .ni-h{display:flex;align-items:baseline;gap:6px;font-size:11.5px;color:#a9a294;margin-bottom:3px}
+.note-item .ni-h .ni-n{color:#fff;background:var(--accent-2);border-radius:3px;padding:0 5px;font-size:10.5px}
+.note-item .ni-t{font-family:var(--cjk);font-size:12.5px;line-height:1.55;color:#3d382f;white-space:pre-wrap;word-break:break-word}
+.note-item .ni-t.empty{color:#b9b2a3}
+/* ---- 平面筆記編輯器（1.4.1）：右鍵 → 筆記 → 句子旁直接寫 ---- */
+.note-pop{position:fixed;z-index:420;width:272px;background:#fffdf8;border:1px solid #ded4bf;
+  border-radius:10px;box-shadow:0 10px 28px rgba(64,48,20,.22);padding:9px 10px 8px}
+.note-pop .np-hd{display:flex;align-items:baseline;gap:7px;margin-bottom:6px}
+.note-pop .np-t{font-size:13px;font-weight:600;color:var(--accent)}
+.note-pop .np-s{font-size:11px;color:#a9a294}
+.note-pop .np-x{margin-left:auto;border:0;background:transparent;color:#c9c2b2;font-size:13px;
+  line-height:1;padding:0 2px;border-radius:4px}
+.note-pop .np-x:hover{background:#f6e3e0;color:var(--red)}
+.note-pop .np-ta{display:block;width:100%;min-height:92px;resize:vertical;border:1px solid var(--line);
+  border-radius:7px;padding:6px 8px;font-family:var(--cjk);font-size:12.5px;line-height:1.6;
+  color:var(--ink);background:#fff;outline:none}
+.note-pop .np-ta:focus{border-color:var(--accent-2);box-shadow:0 0 0 2px rgba(168,133,63,.18)}
+.note-pop .np-ft{display:flex;align-items:center;gap:6px;margin-top:7px}
+.note-pop .np-sp{flex:1}
+.note-pop .np-btn{border:1px solid var(--line);background:#fff;border-radius:6px;padding:4px 12px;
+  font-size:12.5px;color:var(--ink)}
+.note-pop .np-btn:hover{background:#f7f2e7;border-color:var(--accent-2)}
+.note-pop .np-btn.primary{background:var(--accent);border-color:var(--accent);color:#fff}
+.note-pop .np-btn.primary:hover{background:#8d6b36}
+.note-pop .np-btn.np-del{color:var(--red);border-color:#e6c3bd;background:#fff}
+.note-pop .np-btn.np-del:hover{background:#f6e3e0}
+.note-pop .np-btn[disabled]{opacity:.4;cursor:not-allowed}
+/* ---- 縮排紙上的筆記註記框（像 Word 批注） ---- */
+.ol-note{position:absolute;font-family:var(--cjk);font-size:12px;line-height:1.5;
+  background:#fffbe9;border:1px solid #e8d9a8;border-left:3px solid #d9b44a;border-radius:6px;
+  padding:5px 7px;color:#4a4132;box-shadow:0 1px 4px rgba(120,96,32,.12);
+  cursor:text;min-width:110px;z-index:5}
+.ol-note:focus{outline:2px solid var(--accent-2);background:#fff}
+.ol-note .n-del{position:absolute;top:-9px;right:-9px;width:18px;height:18px;border-radius:50%;
+  border:1px solid #ded4bf;background:#fffdf8;color:#c9c2b2;font-size:12px;line-height:1;padding:0;display:none}
+.ol-note:hover .n-del{display:block}
+.ol-note .n-del:hover{background:#f6e3e0;border-color:#e6c3bd;color:var(--red)}
+.ol-note .n-hd{font-size:10px;color:#a99a6a;margin-bottom:2px;user-select:none}
+.ol-note .n-tx{white-space:pre-wrap;word-break:break-word;min-height:1.2em}
+.ol-note.dragging{opacity:.7;box-shadow:0 4px 12px rgba(0,0,0,.2)}
+.ol-note-svg{position:absolute;left:0;top:0;overflow:visible;pointer-events:none;z-index:1}
+.ol-note-svg path{stroke:#d9b44a;stroke-width:1.2;stroke-dasharray:4 3;fill:none}
+
+/* ---------- 整頁左側工具列 ---------- */
+.rail{background:linear-gradient(#fffdf8,#f4efe4);border-right:1px solid var(--line);
+  display:flex;flex-direction:column;align-items:center;gap:3px;padding:9px 4px;overflow:auto}
+.rail .rbtn{width:52px;display:flex;flex-direction:column;align-items:center;gap:2px;
+  border:1px solid transparent;background:transparent;border-radius:8px;padding:6px 2px 5px;
+  color:var(--ink-2);cursor:pointer;transition:.12s}
+.rail .rbtn:hover{background:#f7f2e7;border-color:var(--line);color:var(--ink)}
+.rail .rbtn .ic{font-size:16px;line-height:1;height:18px;display:flex;align-items:center;justify-content:center}
+.rail .rbtn .nm{font-size:10.5px;line-height:1.1;white-space:nowrap;letter-spacing:.2px}
+.rail .rbtn.on{background:var(--accent);border-color:var(--accent);color:#fff}
+.rail .rbtn .ic svg{width:17px;height:17px;display:block}
+/* 平面（flat）按鈕：儲存／開啟／匯出／新分析 —— 去掉漸層與立體感，改用淡色底 + 細分隔線 */
+.rail .rbtn.act{border-radius:7px;background:#f0ebdf;border-color:transparent;color:#6b5535;
+  box-shadow:none;padding:6px 2px 5px}
+.rail .rbtn.act:hover{background:#e7dfcd;border-color:#d6cab0;color:var(--accent)}
+.rail .rbtn.act:active{background:#ded4bf}
+.rail .rbtn.act .ic{color:var(--accent-2)}
+.rail .rbtn.act:active .ic{color:var(--accent)}
+.rail .rsep{width:34px;height:1px;background:var(--line-2);margin:5px 0;flex:none}
+
+.card{background:var(--panel);border:1px solid var(--line-2);border-radius:10px;padding:12px 14px;margin-bottom:14px}
+.card>h3{margin:0 0 10px;font-size:14px;font-weight:600;color:var(--accent);display:flex;align-items:center;gap:8px}
+.card>h3 .hint{font-weight:400;font-size:12px;color:var(--ink-2)}
+
+.tabs{display:flex;gap:4px;margin-bottom:0;position:relative;z-index:2;padding-left:1px}
+.tab{padding:6px 14px;border-radius:8px 8px 0 0;border:1px solid transparent;border-bottom:none;
+  color:var(--ink-2);cursor:pointer;margin-bottom:-1px;line-height:1.35}
+.tab:hover{color:var(--accent)}
+.tab.on{background:var(--panel);border-color:var(--line-2);color:var(--accent);font-weight:600}
+/* 分頁與卡片接合：卡片上緣對齊分頁列，被選中的分頁壓在卡片上緣、連成一體 */
+#viewOutline,#viewGraph,#viewTable{border-radius:0 10px 10px 10px;margin-top:0}
+
+textarea.paste{width:100%;min-height:96px;border:1px solid var(--line);border-radius:8px;padding:9px 11px;
+  font-family:var(--greek);font-size:15px;line-height:1.6;resize:vertical;background:#fffefb}
+.row-opts{display:flex;flex-wrap:wrap;gap:12px;align-items:center;margin:9px 0}
+.row-opts label{display:flex;align-items:center;gap:5px;font-size:12.5px;color:var(--ink-2)}
+.sel{border:1px solid var(--line);border-radius:6px;padding:4px 7px;background:#fffefb;max-width:190px}
+.passage-prev{margin-top:9px;font-family:var(--greek);font-size:14px;line-height:1.6;color:var(--ink-2);
+  background:#fffefb;border:1px dashed var(--line);border-radius:7px;padding:8px 10px;max-height:110px;overflow:auto}
+.passage-prev:empty{display:none}
+
+.meta-grid{display:grid;grid-template-columns:auto 1fr auto 1fr;gap:8px 10px;align-items:center}
+.meta-grid label{font-size:12.5px;color:var(--ink-2);text-align:right}
+.meta-grid input{border:1px solid var(--line);border-radius:6px;padding:4px 8px;width:100%;background:#fffefb}
+
+/* ---------- 縮排分析（1.4.1：自由畫板） ----------
+   紙張不再被視窗擠壓 —— 畫板可橫向捲動，紙張保持可讀寬度；
+   筆記卡改為浮動在紙張右側的畫布上（像 Word 批注），不再佔用固定欄位，
+   所以窄視窗時和合本不會跟希臘文擠在一起。 */
+.ol-head{display:flex;gap:8px;align-items:center;margin-bottom:8px}
+.ol-canvas-wrap{position:relative;overflow:auto;max-height:calc(100vh - 220px);
+  border:1px solid var(--line-2);border-radius:8px;background:#fffdf7;
+  background-image:radial-gradient(rgba(150,130,90,.11) 1px,transparent 1px);
+  background-size:22px 22px;padding:16px 16px 44px}
+.ol-split{position:relative;display:inline-block;min-width:100%;vertical-align:top}
+.ol-split.has-notes{padding-right:308px}
+/* 筆記車道：浮在紙張右側的畫布上，不佔用紙張寬度 */
+.ol-notes-lane{position:absolute;top:0;right:0;width:296px;min-height:120px}
+.ol-notes-lane:empty{display:none}
+.ol-notes-empty{color:var(--ink-2);font-size:11.5px;line-height:1.7;padding:12px 10px;
+  border:1px dashed #e2d9c4;border-radius:8px;background:rgba(255,253,247,.8)}
+.ol-notes-empty b{color:var(--accent)}
+.ol-paper{
+  background:#fff;border:1px solid var(--line-2);border-radius:8px;
+  padding:1.1cm 1.2cm 1.4cm;position:relative;min-height:200px;
+  box-shadow:0 1px 3px rgba(0,0,0,.04);min-width:720px;
+}
+.ol-title{font-family:var(--cjk);font-size:17px;color:var(--ink);margin-bottom:14px;letter-spacing:.5px}
+.ol-title .gk{font-family:var(--greek);font-size:17px}
+.ol-body{position:relative}
+.ol-svg{position:absolute;left:0;top:0;overflow:visible;pointer-events:none}
+.ol-svg path{pointer-events:stroke}
+.ol-row{display:block;position:relative;min-height:26px}
+.ol-gutter{position:relative;flex:none;height:26px}
+.ol-label{
+  position:absolute;transform:translateY(-100%);
+  font-family:var(--cjk);font-size:11px;line-height:1.02;color:var(--ink);
+  text-align:center;white-space:pre;cursor:pointer;padding:0;border-radius:3px;
+  display:flex;flex-direction:column;align-items:center;
+}
+.ol-label:hover{background:#f2ead7;outline:1px solid var(--accent-2)}
+.ol-label .st{color:var(--red)}
+/* 星號（*）：獨立標記，不跟關係字混在一起。
+   重點在首句 → 貼在豎線與上橫線的抝角；重點在次句 → 貼在關係字下方、下橫線上方。 */
+.ol-star{
+  position:absolute;transform:translateY(-50%);
+  font-family:var(--cjk);font-size:12px;line-height:1;color:var(--red);
+  text-align:center;pointer-events:none;
+}
+.ol-text{
+  font-family:var(--greek);font-size:17px;line-height:1.55;white-space:normal;
+  padding:1px 4px;border-radius:4px;min-width:0;display:block;
+}
+.ol-text.editing{background:#fff;outline:2px solid var(--accent-2);white-space:pre-wrap;font-family:var(--greek)}
+/* 編輯中的行：暫時不可拖（選字不會變成拖動整行） */
+.ol-row.editing-row{cursor:text}
+.ol-row.editing-row.hang-drag{cursor:text}
+.ol-text .w{cursor:pointer;border-radius:3px;padding:0 1px}
+.ol-text .w:hover{background:#f3e9d2}
+.ol-text .w.sel{background:#e8dfc4}
+.ol-text .conn{color:var(--red);font-weight:700;background:#fbeceb;border-radius:3px;padding:0 3px}
+.ol-label .blk{display:block;font-size:8.5px;color:var(--accent-2);line-height:1}
+/* ---- 詞類標示（動詞／名詞／形容詞） ---- */
+/* 動詞標示：紅色系（限定動詞 > 分詞 > 不定詞 由深到淡紅） */
+.ol-text .w.k-v{background:#f6c9c4;color:#7a1f18;border-bottom:2px solid #b02a20;border-radius:3px}
+.ol-text .w.k-t{background:#f9dcd8;color:#8c2a22;border-bottom:2px solid #cd5a4c;border-radius:3px}
+.ol-text .w.k-n{background:#fceceb;color:#9a3a30;border-bottom:2px solid #df9284;border-radius:3px}
+.ol-row.marking .ol-text .w.k-v:hover{background:#f2b7b0}
+.ol-row.marking .ol-text .w.k-t:hover{background:#f6cfc9}
+.ol-row.marking .ol-text .w.k-n:hover{background:#f9e0dc}
+/* 名詞標示：橙色系，依五格（主、屬、與間、受直、呼）由深到淡 */
+.ol-text .w.k-c1{background:#f6ac3c;color:#5c3200;border-bottom:2px solid #b56f04;border-radius:3px}
+.ol-text .w.k-c2{background:#f8c06b;color:#6b3d05;border-bottom:2px solid #cf8f1e;border-radius:3px}
+.ol-text .w.k-c3{background:#fad295;color:#79490d;border-bottom:2px solid #e3a94a;border-radius:3px}
+.ol-text .w.k-c4{background:#fce2bb;color:#8a5815;border-bottom:2px solid #edc27a;border-radius:3px}
+.ol-text .w.k-c5{background:#fdeedd;color:#96631c;border-bottom:2px solid #f2d5a6;border-radius:3px}
+/* 形容詞標示：紫色系，同樣依五格深淺 */
+.ol-text .w.k-j1{background:#b39ad8;color:#33154f;border-bottom:2px solid #5f2e94;border-radius:3px}
+.ol-text .w.k-j2{background:#c9b6e5;color:#3f2060;border-bottom:2px solid #7b4bad;border-radius:3px}
+.ol-text .w.k-j3{background:#dcd0ee;color:#4c2b70;border-bottom:2px solid #9668c2;border-radius:3px}
+.ol-text .w.k-j4{background:#eae2f6;color:#593681;border-bottom:2px solid #b18ed4;border-radius:3px}
+.ol-text .w.k-j5{background:#f4f0fa;color:#654293;border-bottom:2px solid #c9aee3;border-radius:3px}
+
+/* ---- 逐字樣式（1.6.1）：只套在使用者選取的那一段字 ----
+   node.rs 的每一段在渲染時包成 <span class="rsp … ">（可嵌套在 .w 裡）。 */
+.ol-text .rsp,.ol-cuv .rsp{background:transparent}
+.rsp.rs-b{font-weight:700}
+.rsp.rs-i{font-style:italic}
+.rsp.rs-u{text-decoration:underline;text-decoration-thickness:1.4px;text-underline-offset:2px}
+/* 舊版「整句樣式」的 class 保留（舊專案相容；新資料改用 .rsp） */
+.ol-text.rs-b,.ol-cuv.rs-b{font-weight:700}
+.ol-text.rs-i,.ol-cuv.rs-i{font-style:italic}
+.ol-text.rs-u,.ol-cuv.rs-u{text-decoration:underline;text-decoration-thickness:1.4px;text-underline-offset:2px}
+/* 點選希臘文詞 → 和合本對應中文詞用同樣顏色高亮（持續） */
+.ol-cuv .czw.selw{border-radius:3px;font-weight:600}
+/* 和合本逐詞片段沿用希臘文詞的底色（名詞橙色／形容詞紫色／動詞紅色／專名下劃線） */
+.ol-cuv .czw{border-radius:3px;padding:0 1px}
+/* 1.6.2：和合本對應的中文詞也要有「同樣的高亮底色」——希臘文詞類一一對應到中文 */
+.ol-cuv .czw.k-v{background:#f6c9c4;color:#7a1f18;border-bottom:2px solid #b02a20}
+.ol-cuv .czw.k-t{background:#f9dcd8;color:#8c2a22;border-bottom:2px solid #cd5a4c}
+.ol-cuv .czw.k-n{background:#fceceb;color:#9a3a30;border-bottom:2px solid #df9284}
+.ol-cuv .czw.k-c1{background:#f6ac3c;color:#5c3200;border-bottom:2px solid #b56f04}
+.ol-cuv .czw.k-c2{background:#f8c06b;color:#6b3d05;border-bottom:2px solid #cf8f1e}
+.ol-cuv .czw.k-c3{background:#fad295;color:#79490d;border-bottom:2px solid #e3a94a}
+.ol-cuv .czw.k-c4{background:#fce2bb;color:#8a5815;border-bottom:2px solid #edc27a}
+.ol-cuv .czw.k-c5{background:#fdeedd;color:#96631c;border-bottom:2px solid #f2d5a6}
+.ol-cuv .czw.k-j1{background:#b39ad8;color:#33154f;border-bottom:2px solid #5f2e94}
+.ol-cuv .czw.k-j2{background:#c9b6e5;color:#3f2060;border-bottom:2px solid #7b4bad}
+.ol-cuv .czw.k-j3{background:#dcd0ee;color:#4c2b70;border-bottom:2px solid #9668c2}
+.ol-cuv .czw.k-j4{background:#eae2f6;color:#593681;border-bottom:2px solid #b18ed4}
+.ol-cuv .czw.k-j5{background:#f4f0fa;color:#654293;border-bottom:2px solid #c9aee3}
+.ol-cuv .czw.pr,.ol-cuv .czw.pr-p,.ol-cuv .czw.pr-l,.ol-cuv .czw.pr-n{text-decoration:underline;text-decoration-thickness:1.5px;text-underline-offset:2px}
+.ol-cuv .czw.pr-p{text-decoration-color:#6b3fa0}
+.ol-cuv .czw.pr-l{text-decoration-color:#1f7a4d}
+.ol-cuv .czw.pr-n{text-decoration-color:#b26205}
+
+/* ---- 專有名詞（1.5.0）：人名／地名／國族＋國家 → 下劃線 ----
+   用 text-decoration 而不是 border-bottom，才不會與上面的動詞標示（border-bottom）打架。 */
+.ol-text .w.pr,.ol-text .conn.pr{text-decoration:underline;text-decoration-thickness:1.5px;text-underline-offset:2px}
+.ol-text .w.pr-p,.ol-text .conn.pr-p{text-decoration-color:#6b3fa0}   /* 人名：紫 */
+.ol-text .w.pr-l,.ol-text .conn.pr-l{text-decoration-color:#1f7a4d}   /* 地名：綠 */
+.ol-text .w.pr-n,.ol-text .conn.pr-n{text-decoration-color:#b26205}   /* 國族／國家：橙 */
+
+/* ---- 介係詞片語：可拖曳、可掛靠在某個單詞後面 ---- */
+/* 高亮只到「句子」本身（包住文字），不要整行都上色 → width:fit-content */
+.ol-row-prep{cursor:grab}
+.ol-row-prep .ol-text{background:rgba(122,92,46,.055);border-left:2px dotted rgba(150,120,60,.55);
+  padding-left:6px;border-radius:3px;width:fit-content;max-width:100%}
+.ol-row-prep.dragging{opacity:.45}
+.ol-row-prep.aligned .ol-text{background:rgba(43,127,184,.09);border-left:2px solid rgba(43,127,184,.65);width:fit-content;max-width:100%}
+.ol-row-prep .prep-tag{font-family:var(--cjk);font-size:9.5px;color:#7a5c2e;background:#f3e9d2;
+  border-radius:3px;padding:0 4px;margin-left:5px;vertical-align:2px}
+.ol-prep-svg{position:absolute;left:0;top:0;width:100%;overflow:visible;pointer-events:none;z-index:0}
+.ol-row.dropping{background:#f7efdb;border-radius:6px}
+/* 任何一句都能拖去掛靠在別的單詞後面 */
+.ol-row.hang-drag{cursor:grab}
+/* 1.3.2：拖曳句子時，游標所在的目標單詞亮起來 */
+.ol-text .w.drop-hot,.ol-text .conn.drop-hot{
+  background:#ffe9a8 !important;box-shadow:0 0 0 2px #f0c14b;border-radius:3px;color:#6b4b00 !important}
+/* 1.6.2：掛靠完成後不再高亮被掛靠的單詞（陳霂要求）；原本的 .hang-target 標示已取消 */
+.ol-num{position:absolute;font-family:var(--greek);font-size:10px;color:var(--ink-2);
+  top:50%;transform:translate(-100%,-100%);margin-top:-1.5px;white-space:nowrap;
+  text-align:right;line-height:1;z-index:2}
+/* 剪句模式：整張紙上的希臘文都變成剪刀游標 */
+/* 剪句模式：游標變成剪刀，文字上跟著鼠標顯示「精確切口」 */
+body.scissor .ol-text,body.scissor .ol-text *{
+  cursor:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='26' height='26' viewBox='0 0 26 26'%3E%3Cg fill='none' stroke='%23c0392b' stroke-width='1.7' stroke-linecap='round'%3E%3Ccircle cx='7' cy='20' r='3.2'/%3E%3Ccircle cx='15.5' cy='21.5' r='2.6'/%3E%3Cpath d='M9 17.6 L20 4'/%3E%3Cpath d='M13.4 19.6 L21 9'/%3E%3C/g%3E%3C/svg%3E") 20 4, crosshair}
+body.scissor .ol-text:hover{background:rgba(168,52,44,.05)}
+.scissor-mark{position:fixed;z-index:390;pointer-events:none;display:none}
+.scissor-mark.on{display:block}
+.scissor-mark .sc-bar{position:absolute;left:0;top:0;width:0;border-left:2px dashed #c0392b;
+  transform:translateX(-1px);border-radius:1px}
+.ol-text .sc-nb{background:rgba(192,57,43,.13);outline:1px dashed rgba(192,57,43,.6);border-radius:3px}
+/* 詞序模式：句中單詞可拖動 */
+body.wordmode .ol-text .w,body.wordmode .ol-text .conn{cursor:grab;outline:1px dashed rgba(122,92,46,.45);outline-offset:1px}
+.ol-text .wmove-src{opacity:.35}
+.ol-text .wmove-over{background:#f3e2b8 !important;border-radius:3px}
+body.wordmode .ol-text{background:rgba(122,92,46,.045)}
+/* 滑到希臘文詞時，和合本欄對應的那個詞亮起來 */
+.ol-cuv .czw{border-radius:3px;padding:0 1px}
+.ol-cuv .czw.hot{background:#ffe9a8;box-shadow:0 0 0 2px #ffe9a8;color:#6b4b00;font-weight:600}
+.ol-grip{position:absolute;top:50%;transform:translateY(-50%);width:15px;height:18px;
+  text-align:center;font-size:11px;line-height:18px;color:#d5cdbb;cursor:grab;
+  border-radius:4px;user-select:none;z-index:3}
+.ol-row:hover .ol-grip{color:var(--accent-2);background:#f7f2e7}
+.ol-row.dragging{opacity:.5}
+/* 行工具列（右鍵彈出）：豎版、每項有工具簡稱 */
+.ol-pal{position:fixed;display:none;flex-direction:column;align-items:stretch;gap:2px;z-index:400;
+  background:#fffdf8;border:1px solid #ded4bf;border-radius:10px;padding:4px;min-width:96px;
+  box-shadow:0 8px 22px rgba(64,48,20,.20)}
+.ol-pal .btn{white-space:nowrap;display:flex;align-items:center;gap:8px;text-align:left;
+  padding:4px 9px;border-radius:6px;font-size:12.5px;background:transparent;border-color:transparent}
+.ol-pal .btn:hover{background:#f7f2e7;border-color:var(--line)}
+.ol-pal .btn .ic{width:1.5em;flex:none;text-align:center;font-size:14px;line-height:1}
+.ol-pal .btn .nm{flex:1}
+.ol-pal .btn.on{background:var(--accent);border-color:var(--accent);color:#fff}
+.ol-row.hovering{background:rgba(214,190,140,.14);border-radius:6px}
+/* 選取的行（左側「行工具」作用對象；A 選擇模式的反饋） */
+.ol-row.selected-row{background:rgba(122,92,46,.10);border-radius:6px;box-shadow:inset 3px 0 0 var(--accent-2)}
+/* 左側「行工具」按鈕：比一般 rbtn 緊一點，動作類（A~D）稍作區隔 */
+.rail .rbtn.rtool{padding:5px 2px 4px}
+.rail .rbtn.rtool .ic{font-size:15px}
+/* 合句（關係）左側的獨立連結符號：可拖去和其他句子／關係連接 */
+.ol-relgrip{position:absolute;transform:translateY(-50%);width:14px;height:16px;
+  text-align:center;font-size:10px;line-height:16px;color:#cbbb90;cursor:grab;
+  border-radius:4px;user-select:none;z-index:4;opacity:.6}
+.ol-relgrip:hover{opacity:1;color:var(--accent);background:#f3e9d2}
+.ol-relgrip:active{cursor:grabbing}
+.ol-row.rel-dropping{background:#eef5e6;border-radius:6px;box-shadow:0 0 0 2px #b9d3a2 inset}
+.glbl2.drag-src{background:var(--accent);color:#fff;border-color:var(--accent)}
+.ol-hint{color:var(--ink-2);font-size:12px;padding:18px 4px}
+
+/* 和合本對照欄 */
+.ol-body.has-cuv .ol-cols{display:grid;grid-template-columns:minmax(0,1fr) var(--cuv-l,300px);align-items:start;column-gap:14px;position:relative}
+.ol-cuv{font-family:var(--cjk);font-size:13.5px;line-height:1.55;color:#3d382f;padding:1px 4px;border-radius:4px;
+  border-left:2px solid #ece5d6;position:relative;min-width:0;z-index:2}
+.ol-cuv{min-height:1.4em}
+.ol-cuv.editing{background:#fff;outline:2px solid var(--accent-2);white-space:pre-wrap}
+.ol-cuvhd{display:grid;grid-template-columns:minmax(0,1fr) var(--cuv-l,300px);column-gap:14px;
+  font-family:var(--cjk);font-size:11.5px;color:#a9a294;letter-spacing:.5px;
+  border-bottom:1px solid #ece5d6;padding-bottom:4px;margin-bottom:8px}
+.ol-cuvhd span:first-child{margin-left:0}
+.ol-cuvhd span:last-child{padding-left:4px}
+
+/* 取經文下方的和合本預覽 */
+.cuv-prev-wrap{margin-top:10px;border-top:1px dashed #e6dfd0;padding-top:8px}
+.cuv-head{display:flex;align-items:center;gap:8px;font-size:12.5px;color:#5c574e;margin-bottom:6px}
+.cuv-head .spacer{flex:1}
+.cuv-prev{max-height:230px;overflow:auto;padding-right:4px}
+.cuv-item{display:grid;grid-template-columns:22px minmax(0,1.25fr) minmax(0,1fr);gap:8px;
+  padding:3px 0;border-bottom:1px solid #f4efe4;font-size:12.5px;align-items:baseline}
+.cuv-item .cv{font-family:var(--greek);font-size:10px;color:#b9b2a3;text-align:right}
+.cuv-item .cg{font-family:var(--greek);color:#33302a}
+.cuv-item .cz{font-family:var(--cjk);color:#6b6459}
+
+/* ---------- 關係總表 ---------- */
+.reltable{font-size:13px}
+.rt-head,.rt-row{display:grid;grid-template-columns:70px 46px 70px 1fr;gap:8px;align-items:center;padding:5px 6px}
+.rt-head{color:#a9a294;font-size:12px;border-bottom:1px solid var(--line-2)}
+.rt-row{border-bottom:1px solid #f2eee5;cursor:pointer;border-radius:5px}
+.rt-row:hover{background:#fdf8ec}
+.rt-row .c1{font-family:var(--greek)}
+.rt-row .c2{text-align:center;color:var(--accent-2)}
+.rt-row .c3{font-weight:600;color:var(--accent)}
+.c5{display:none}
+
+/* ---------- 關係圖（邏輯樹／腦圖） ---------- */
+.graph-wrap{display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:12px;align-items:start}
+.graph-wrap.no-cuv{grid-template-columns:minmax(0,1fr)}
+.gcuv{border:1px solid var(--line-2);border-radius:8px;background:#fffefb;overflow:auto;
+  max-height:560px;padding:8px 10px}
+.gcuv-hd{font-size:12px;color:var(--accent);font-weight:600;border-bottom:1px solid #ece5d6;
+  padding-bottom:6px;margin-bottom:6px;position:sticky;top:-8px;background:#fffefb;z-index:2}
+.gcuv-hd .hint{font-weight:400;color:#a9a294;font-size:11px;margin-left:4px}
+.gcuv-row{display:grid;grid-template-columns:26px minmax(0,1fr);gap:6px;padding:3px 4px;border-radius:5px;cursor:pointer}
+.gcuv-row:hover{background:#f7f2e7}
+.gcuv-row.hot{background:#ffe9a8}
+.gcuv-row .gv{font-family:var(--greek);font-size:10px;color:#b9b2a3;padding-top:3px;text-align:right}
+.gcuv-row .gz{font-family:var(--cjk);font-size:12.5px;line-height:1.5;color:#3d382f}
+.gcuv-empty{color:var(--ink-2);font-size:12px;padding:14px 4px;line-height:1.6}
+#graph{position:relative;background:
+  radial-gradient(circle at 12% 20%,rgba(197,138,46,.05),transparent 45%),
+  radial-gradient(circle at 78% 70%,rgba(63,127,166,.05),transparent 45%),
+  #fffefb;border:1px solid var(--line-2);border-radius:8px;height:560px;overflow:auto;cursor:default}
+/* 關係圖是拖曳畫布：這個界面上不要選到文字（拖線時會反白） */
+#graph,#graph *{-webkit-user-select:none;-moz-user-select:none;user-select:none;-webkit-user-drag:none}
+.gnode{position:absolute;background:#fff;border:1.5px solid var(--line);
+  border-radius:8px;padding:6px 9px;font-family:var(--greek);font-size:14.5px;line-height:1.35;
+  box-shadow:0 1px 2px rgba(0,0,0,.05);user-select:none}
+.gnode .gt{display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+/* 關係圖方塊裡的專名下劃線（1.5.0） */
+.gnode .gt .w.pr{text-decoration:underline;text-decoration-thickness:1.5px;text-underline-offset:2px}
+.gnode .gt .w.pr-p{text-decoration-color:#6b3fa0}
+.gnode .gt .w.pr-l{text-decoration-color:#1f7a4d}
+.gnode .gt .w.pr-n{text-decoration-color:#b26205}
+/* 子句卡片：可拖、在腦圖上置中對齊分支 */
+.gnode.leaf{min-width:150px;max-width:250px;cursor:grab;border-left:4px solid #d8c9a4}
+.gnode.leaf:hover{border-color:var(--accent-2)}
+.gnode.target{border-color:var(--accent);box-shadow:0 0 0 3px #e7d9ba;background:#fffdf5}
+.gnode.sel{border-color:var(--accent);box-shadow:0 0 0 2px #e7d9ba}
+.gnode .gv{font-size:9.5px;color:var(--ink-2);font-family:var(--greek)}
+.gnode .port{position:absolute;width:11px;height:11px;border-radius:50%;background:#fff;
+  border:1.5px solid var(--accent-2);top:50%;margin-top:-5.5px;cursor:crosshair;z-index:6}
+.gnode .port.l{left:-6px}
+.gnode .port:hover{background:var(--accent-2);transform:scale(1.25)}
+/* 連線上的關係詞（寫在豎線中點） */
+.glbl2{position:absolute;transform:translate(-50%,-50%);z-index:3;
+  font-family:var(--cjk);font-size:11.5px;line-height:1.05;color:var(--ink);
+  background:#fffefb;border:1px solid #ded4bf;border-radius:4px;padding:0 3px;
+  white-space:pre;cursor:pointer;user-select:none}
+.glbl2:hover{border-color:var(--accent);background:#fdf6e6}
+.glbl2.sel{border-color:var(--accent);background:var(--accent);color:#fff;box-shadow:0 0 0 2px #e7d9ba}
+.glbl2.target{border-color:var(--accent-2);background:#fff3cf;box-shadow:0 0 0 3px #f0dfae}
+.glbl2 .st{color:var(--red)}
+/* 關係節點：貼在分支上的彩色膠囊 */
+.gnode.relnode{padding:3px 9px;min-width:0;max-width:170px;font-family:var(--cjk);font-size:12.5px;
+  font-weight:600;overflow:visible;cursor:grab;border-radius:20px;
+  background:linear-gradient(#fffdf7,#f6efdf);border-color:#d9c9a2;color:#7a5c2e;
+  box-shadow:0 1px 3px rgba(122,92,46,.15)}
+.gnode.relnode.auto{border-style:dashed}
+.gnode.relnode:hover{border-color:var(--accent)}
+.gnode.relnode::before{content:"◈";font-size:9px;color:#c58a2e;margin-right:4px;vertical-align:1px}
+#gsvg{position:absolute;left:0;top:0;pointer-events:none;overflow:visible}
+.graph-inner{position:relative;transform-origin:0 0}
+.zoom-ctl{display:inline-flex;align-items:center;gap:2px;margin-right:4px}
+.zoom-val{font-size:12px;color:var(--ink-2);min-width:40px;text-align:center}
+#gsvg path{pointer-events:stroke;cursor:pointer}
+#gsvg path:hover{stroke-opacity:1;stroke-width:3}
+.gnode.leaf.hot{border-color:var(--accent);box-shadow:0 0 0 3px #f0dfae;background:#fffdf5}
+/* 從圓點拖線時的即時預覽線（虛線流動＝有在動畫） */
+#gedge{position:absolute;left:0;top:0;pointer-events:none;overflow:visible;z-index:6}
+#gedge path{stroke-dasharray:8 5;animation:gedgeflow .6s linear infinite}
+@keyframes gedgeflow{to{stroke-dashoffset:-13}}
+.gnode .port:active,.gnode .port.dragging{background:var(--accent);border-color:var(--accent)}
+.glbl{font-family:var(--cjk);font-size:11px;fill:var(--ink);text-anchor:middle;cursor:pointer;
+  paint-order:stroke;stroke:#fffefb;stroke-width:3px}
+
+/* ---------- 整句編輯工具列（懸浮在句子上方） ---------- */
+.edit-bar{position:fixed;z-index:410;display:none;align-items:center;gap:3px;
+  background:#fffdf8;border:1px solid #ded4bf;border-radius:9px;padding:4px 6px;
+  box-shadow:0 8px 22px rgba(64,48,20,.20)}
+.edit-bar.on{display:flex}
+.edit-bar .eb-b{width:26px;height:24px;border:1px solid transparent;background:transparent;border-radius:6px;
+  font-size:13px;line-height:1;color:var(--ink);display:flex;align-items:center;justify-content:center}
+.edit-bar .eb-b:hover{background:#f7f2e7;border-color:var(--line)}
+.edit-bar .eb-b.on{background:var(--accent);border-color:var(--accent);color:#fff}
+.edit-bar .eb-b b{font-weight:800}
+.edit-bar .eb-b i{font-style:italic;font-family:var(--greek)}
+.edit-bar .eb-b u{text-decoration:underline}
+.edit-bar .eb-sep{width:1px;height:18px;background:var(--line-2);margin:0 3px}
+.edit-bar .eb-sw{width:20px;height:20px;border-radius:5px;border:1px solid #d8cfbc;cursor:pointer;padding:0}
+.edit-bar .eb-sw:hover{transform:scale(1.12)}
+.edit-bar .eb-sw.on{box-shadow:0 0 0 2px var(--accent-2);border-color:var(--accent-2)}
+.edit-bar .eb-x{width:22px;height:24px;border:1px solid transparent;background:transparent;border-radius:6px;
+  color:#c9c2b2;font-size:14px;line-height:1;padding:0}
+.edit-bar .eb-x:hover{background:#f6e3e0;color:var(--red)}
+
+/* ---------- 詞彙查詢 ---------- */
+.btn.on{background:var(--accent);border-color:var(--accent);color:#fff}
+.side h3{margin:0 0 8px;font-size:14px;color:var(--accent)}
+.dlg input[type=number]{border:1px solid var(--line);border-radius:6px;padding:4px 6px}
+.word-hd{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap;margin-bottom:6px}
+.word-hd .gw{font-family:var(--greek);font-size:26px;color:var(--ink)}
+.word-hd .tr{font-family:var(--greek);font-size:13px;color:var(--ink-2)}
+.zh-lex{font-size:14px;line-height:1.6;margin:7px 0;padding:7px 10px;background:#f7f3e8;
+  border-radius:6px;border-left:3px solid var(--accent-2)}
+.zh-lex .zl{display:inline-block;font-size:10.5px;color:#fff;background:var(--accent-2);
+  border-radius:3px;padding:1px 5px;margin-right:7px;vertical-align:1px}
+.zh-lex b{font-size:17px;color:var(--accent)}
+.zh-lex .zn{font-size:11.5px;color:#a9a294;margin-left:6px}
+.zh-lex.none{background:#faf8f3;border-left-color:var(--line-2)}
+.zh-lex.none .zl{background:#c9c2b2}
+.word-hd .sn{font-size:11.5px;color:#fff;background:var(--blue);border-radius:3px;padding:1px 6px}
+.en-lbl{display:inline-block;font-size:10.5px;color:#777;background:#ece7db;border-radius:3px;
+  padding:1px 5px;margin-right:6px}
+.en-d{color:#8b8578}
+.lex{font-size:12.5px;line-height:1.6;color:var(--ink-2);border-left:2px solid var(--line-2);padding-left:9px;margin:8px 0}
+.lex b{color:var(--ink)}
+.parse-list{display:flex;flex-direction:column;gap:7px;margin-top:8px}
+.parse{border:1px solid var(--line-2);border-radius:7px;padding:7px 9px;background:#fffefb}
+.parse .pos{font-weight:600;color:var(--blue);font-size:13px}
+.parse .bits{display:flex;flex-wrap:wrap;gap:4px;margin-top:5px}
+.chip{background:#f1ece0;border-radius:4px;padding:1px 6px;font-size:11.5px;color:var(--ink-2)}
+.chip.voice{background:#e3ecf5;color:var(--blue);font-weight:600}
+.chip.tense{background:#f3e7e2;color:#8a4a32}
+.chip.case{background:#e8f0e4;color:#3d6b35}
+.parse .lem{font-family:var(--greek);font-size:13px;color:var(--ink);margin-top:5px}
+.parse .cnt{float:right;font-size:11px;color:#a9a294}
+.empty{color:#a9a294;font-size:12.5px;padding:8px 0}
+
+/* ---------- 挑選器／對話框 ---------- */
+.mask{position:fixed;inset:0;background:rgba(30,28,24,.34);display:none;z-index:200;
+  align-items:center;justify-content:center;padding:24px}
+.mask.on{display:flex}
+.dlg{background:#fff;border-radius:12px;max-width:760px;width:100%;max-height:82vh;overflow:auto;
+  padding:16px 18px;box-shadow:0 12px 40px rgba(0,0,0,.22)}
+.dlg h2{margin:0 0 4px;font-size:16px;color:var(--accent)}
+.dlg p.sub{margin:0 0 12px;font-size:12.5px;color:var(--ink-2)}
+.rel-list{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.rel{border:1px solid var(--line-2);border-radius:8px;padding:8px 10px;cursor:pointer;text-align:left;background:#fff}
+.rel:hover{border-color:var(--accent-2);background:#fdfaf3}
+.rel.on{border-color:var(--accent);background:#f8f1e0}
+.rel .rt{display:flex;align-items:center;gap:7px}
+.rel .rs{font-family:var(--cjk);font-size:15px;color:var(--accent);font-weight:600;min-width:1.6em}
+.rel .rn{font-size:13px;font-weight:600}
+.rel .re{font-size:11px;color:#a9a294}
+.rel .rd{font-size:11.5px;color:var(--ink-2);margin-top:4px;line-height:1.45}
+.rel .rk{font-family:var(--greek);font-size:11px;color:#6d8a5f;margin-top:3px}
+.dlg-foot{display:flex;gap:8px;align-items:center;margin-top:14px;padding-top:12px;border-top:1px solid var(--line-2)}
+.dlg-foot .spacer{flex:1}
+.dlg input[type=text]{border:1px solid var(--line);border-radius:6px;padding:5px 8px}
+/* ---------- 專案對話框（儲存／開啟／匯出／新分析） ---------- */
+.fld{display:flex;align-items:center;gap:10px;margin:12px 0}
+.fld>span{font-size:12.5px;color:var(--ink-2);min-width:60px;text-align:right}
+.fld input[type=text]{flex:1;font-size:14px;padding:7px 10px}
+.proj-list{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:4px}
+.proj-card{border:1px solid var(--line-2);border-radius:9px;padding:9px 11px;cursor:pointer;
+  text-align:left;background:#fffefb;display:flex;flex-direction:column;gap:4px;position:relative}
+.proj-card:hover{border-color:var(--accent-2);background:#fdfaf3;box-shadow:0 2px 8px rgba(0,0,0,.06)}
+.proj-card .pc-t{font-size:13.5px;font-weight:600;color:var(--ink);line-height:1.3}
+.proj-card .pc-m{font-size:11.5px;color:var(--ink-2);display:flex;gap:8px;flex-wrap:wrap}
+.proj-card .pc-m .tag{background:#f1ece0;border-radius:4px;padding:1px 6px}
+.proj-card .pc-d{font-size:11px;color:#a9a294}
+.proj-card .pc-x{position:absolute;top:6px;right:6px;width:20px;height:20px;border-radius:5px;
+  border:1px solid transparent;background:transparent;color:#c9c2b2;font-size:14px;line-height:1;padding:0}
+.proj-card .pc-x:hover{background:#f6e3e0;border-color:#e6c3bd;color:var(--red)}
+.info-box{font-size:12.5px;color:var(--ink-2);line-height:1.65;background:#f8f6f0;
+  border-left:3px solid var(--accent-2);border-radius:0 6px 6px 0;padding:8px 12px;margin:10px 0 2px}
+.info-box b{color:var(--accent)}
+.info-box .warn{color:var(--red);font-weight:600}
+.info-box code{font-family:var(--greek);font-size:11.5px;background:#efe9dc;border-radius:3px;padding:1px 5px}
+.toast{position:fixed;left:50%;bottom:26px;transform:translateX(-50%);background:#2b2924;color:#fff;
+  padding:9px 16px;border-radius:8px;font-size:13px;opacity:0;transition:.2s;pointer-events:none;z-index:400}
+.toast.on{opacity:.95}
+.legend{font-size:12px;color:var(--ink-2);line-height:1.7}
+.legend b{color:var(--ink)}
+kbd{background:#f1ece0;border:1px solid var(--line);border-bottom-width:2px;border-radius:4px;
+  padding:0 4px;font-size:11.5px;font-family:var(--cjk)}
